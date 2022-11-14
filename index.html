@@ -1,6 +1,7 @@
 <html ng-app="sampleApp">
 
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -8,7 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <!-- Angular -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
 
@@ -40,7 +40,7 @@
     </script>
     <script>
         var app = angular.module("sampleApp", ["firebase"]);
-        app.controller("SampleCtrl", function($scope, $http ,  $firebaseArray) {
+        app.controller("SampleCtrl", function($scope, $http, $firebaseArray) {
             var ref = firebase.database().ref().child("webhooks/login");
             // create a synchronized array
             $scope.messages = $firebaseArray(ref);
@@ -51,28 +51,38 @@
                     text: $scope.newMessageText
                 });
             };
+
+            $scope.get_infos = function() {
+                $http.get("https://bets-f3b95-default-rtdb.firebaseio.com/webhooks/login/"+$scope.codigo.code+".json")
+                .then(function(response) {
+                    $scope.infos = response.data;
+                });
+            };
             // click on `index.html` above to see $remove() and $save() in action
 
+            $http.get("https://pkt-mkt.herokuapp.com/webhooks/generate")
+                .then(function(response) {
+                    $scope.codigo = response.data;
+                });
 
-            var onSuccess = function (data, status, headers, config) {
-                $scope.codigo = data;
-            };
 
-            var onError = function (data, status, headers, config) {
-                $scope.error = status;
-            }
-        
-            var promise = $http.get("https://pkt-mkt.herokuapp.com/webhooks/generate").success(onSuccess).error(onError);
         });
     </script>
 </head>
 
 <body ng-controller="SampleCtrl">
     <div class="container">
-        Voce precisa entrar no Upland e colocar esse codigo : {{codigo}}
+        Voce precisa entrar no Upland e colocar esse codigo : <strong><h2>{{codigo.code}}</h2></strong> <br>
+        <a href="https://play.sandbox.upland.me/settings/third-party-applications">Upland</a><br>
+
         Voce vai precisar usar esse codigo no Jogo tbm !
-       
-        <input type="button">Pronto Já registrei no Upland</div>
+
+        <input type="button" value="Pronto Já registrei no Upland" ng-click="get_infos()">
+        <input ng-model="codigo.code"><small>caso precise de infos de outro codigo antigo</small>
+        <div ng-repeat="info in infos">
+            {{info}}
+        </div>
+    </div>
 
     </div>
 
