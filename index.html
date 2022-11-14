@@ -40,7 +40,7 @@
     </script>
     <script>
         var app = angular.module("sampleApp", ["firebase"]);
-        app.controller("SampleCtrl", function($scope, $firebaseArray) {
+        app.controller("SampleCtrl", function($scope, $http ,  $firebaseArray) {
             var ref = firebase.database().ref().child("webhooks/login");
             // create a synchronized array
             $scope.messages = $firebaseArray(ref);
@@ -52,19 +52,27 @@
                 });
             };
             // click on `index.html` above to see $remove() and $save() in action
+
+
+            var onSuccess = function (data, status, headers, config) {
+                $scope.codigo = data;
+            };
+
+            var onError = function (data, status, headers, config) {
+                $scope.error = status;
+            }
+        
+            var promise = $http.get("https://pkt-mkt.herokuapp.com/webhooks/generate").success(onSuccess).error(onError);
         });
     </script>
 </head>
 
 <body ng-controller="SampleCtrl">
     <div class="container">
-
-        <div class="container-fluid">
-            <div class="row" ng-repeat="message in messages">
-                {{message}}
-                <hr>
-            </div>
-        </div>
+        Voce precisa entrar no Upland e colocar esse codigo : {{codigo}}
+        Voce vai precisar usar esse codigo no Jogo tbm !
+       
+        <input type="button">Pronto Já registrei no Upland</div>
 
     </div>
 
