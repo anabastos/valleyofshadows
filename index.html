@@ -80,11 +80,11 @@
         Voce precisa entrar no Upland e colocar esse codigo : <strong><h2>{{codigo.code}}</h2></strong> <br>
         Insira o codigo na <a href="https://play.sandbox.upland.me/settings/third-party-applications">Upland</a><br>
 
-        Voce vai precisar usar esse codigo no Jogo tbm !<br>
+        <strong> vai precisar usar esse codigo no Jogo tbm !</strong><br>
 
         <small>caso precise de infos de outro codigo antigo click <a ng-click="outro_codigo()">aqui</a></small>
         <br>
-        <input ng-model="codigo.code" ng-show="outro_codigo">
+        <input ng-model="codigo.code" ng-show="outro_codigo == true">
         <hr>
         <input type="button" value="Pronto Já registrei no Upland" ng-click="get_infos()"><br>
         <h3 ng-show="infos">Infos</h3>
