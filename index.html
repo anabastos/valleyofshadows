@@ -44,6 +44,7 @@
             var ref = firebase.database().ref().child("webhooks/login");
             // create a synchronized array
             $scope.messages = $firebaseArray(ref);
+            $scope.outro_codigo = false;
             // add new items to the array
             // the message is automatically added to our Firebase database!
             $scope.addMessage = function() {
@@ -57,6 +58,10 @@
                 .then(function(response) {
                     $scope.infos = response.data;
                 });
+            };
+
+            $scope.outro_codigo = function() {
+                $scope.outro_codigo = true;
             };
             // click on `index.html` above to see $remove() and $save() in action
 
@@ -73,13 +78,15 @@
 <body ng-controller="SampleCtrl">
     <div class="container">
         Voce precisa entrar no Upland e colocar esse codigo : <strong><h2>{{codigo.code}}</h2></strong> <br>
-        <a href="https://play.sandbox.upland.me/settings/third-party-applications">Upland</a><br>
+        Insira o codigo na <a href="https://play.sandbox.upland.me/settings/third-party-applications">Upland</a><br>
 
         Voce vai precisar usar esse codigo no Jogo tbm !<br>
 
-        <input type="button" value="Pronto Já registrei no Upland" ng-click="get_infos()"><br>
-        <input ng-model="codigo.code"><small>caso precise de infos de outro codigo antigo</small>
+        <small>caso precise de infos de outro codigo antigo click <a ng-click="outro_codigo()">aqui</a></small>
+        <br>
+        <input ng-model="codigo.code" ng-show="outro_codigo">
         <hr>
+        <input type="button" value="Pronto Já registrei no Upland" ng-click="get_infos()"><br>
         <h3 ng-show="infos">Infos</h3>
         <div ng-repeat="info in infos">
             Username : <strong>{{info.username}}</strong><br>
